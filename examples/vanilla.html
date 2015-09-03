@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <script src="../vanilla.js" type="text/javascript" charset="utf-8"></script>
+        <style type="text/css">
+        body {
+            box-shadow:0px 0px 5px #000;
+            display:flex;
+            flex-direction:column;
+            margin:0 auto;
+            padding:10px 20px;
+            width:1000px;
+        }
+        pre {
+            box-shadow: 0px 0px 2px #000;
+            background-color:#F0F0F0;
+        }
+        div.single, [class^=gallery] {
+            display:flex;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Vanilla framework</h1>
+
+        <h2>Create node and add content</h2>
+        <!-- Single image automatic -->
+        <div class="example"></div>
+        <script type="text/javascript">
+        vanilla('<a>').attr('href', 'image1.jpg')
+            .append( vanilla('<img>').attr('src', 'thumbs/image1.jpg') )
+            .appendTo('.example:first-of-type');
+        </script>
+        <pre><code>
+    &lt;div class=&quot;example&quot;&gt;&lt;/div&gt;
+
+    &lt;script type=&quot;text/javascript&quot;&gt;
+    vanilla('&lt;a&gt;').attr('href', 'image1.jpg')
+        .append( vanilla('&lt;img&gt;').attr('src', 'thumbs/image1.jpg') )
+        .appendTo('.example:first-of-type');
+    &lt;/script&gt;
+        </code></pre>
+
+        <h2>Adding overlay on click</h2>
+        <script type="text/javascript">
+        // Define overlay
+        overlay = vanilla('<div>')
+            .css('background', '#000')
+            .css('bottom', 0)
+            .css('display', 'none')
+            .css('height', '100%')
+            .css('left', 0)
+            .css('opacity', 0.75)
+            .css('position', 'fixed')
+            .css('right', 0)
+            .css('top', 0)
+            .css('width', '100%')
+            .css('z-index', 1)
+            .prependTo('body')
+            .on('click', function() {
+                overlay.fadeOut();
+            });
+
+        // Add event handler
+        vanilla('.example > a').on('click', function(event){
+            event.preventDefault();
+            overlay.fadeIn();
+        });
+        </script>
+        <pre><code>
+    &lt;script type=&quot;text/javascript&quot;&gt;
+    // Define overlay
+    overlay = vanilla('&lt;div&gt;')
+        .css('background', '#000')
+        .css('bottom', 0)
+        .css('display', 'none')
+        .css('height', '100%')
+        .css('left', 0)
+        .css('opacity', 0.75)
+        .css('position', 'fixed')
+        .css('right', 0)
+        .css('top', 0)
+        .css('width', '100%')
+        .css('z-index', 1)
+        .prependTo('body')
+        .on('click', function() {
+            overlay.fadeOut();
+        });
+
+    // Add Event handler
+    vanilla('.single &gt; a').on('click', function(event){
+        event.preventDefault();
+        overlay.fadeIn();
+    });
+    &lt;/script&gt;
+        </code></pre>
+
+        <script type="text/javascript">
+        //var blocker = new vanilla('<div>');
+        /*
+        var blocker = vanilla('<div>');
+        blocker.addClass('overlay');
+        blocker.css('top', 0)
+            .css('right', 0)
+            .css('bottom', 0)
+            .css('left', 0)
+            .css('width', '100%')
+            .css('height', '100%')
+            .css('position', 'fixed')
+            .css('z-index', 1)
+            .css('background', '#000')
+            .css('opacity', 0.75)
+            .on('click', function() {
+                console.log('click');
+                vanilla('.overlay').css('display', 'none');
+            })
+            .off('click')
+            .on('click', function() {
+                vanilla('.overlay').fadeOut();//.css('display', 'none');
+            });
+        vanilla('.single > a').on('click', function(event) {
+            event.preventDefault();
+            overlay.fadeIn();
+        })
+        */
+        /*
+        //console.log(blocker.css('opacity'));
+        blocker.attr('data-vanilla-type', 'overlay');
+        //console.log(blocker.attr('data-vanilla-type'));
+        //new vanilla('body').prepend(blocker);
+        blocker.prependTo(vanilla('body'));
+        //console.log(blocker.next().css('color', '#FE5197'));
+        blocker.on('click', function() {return;});
+        */
+
+
+        singles = vanilla('.example');
+        singles.each(function( el ) {
+            el.css('background', '#FBFBFB');
+        });
+        </script>
+    </body>
+</html>
