@@ -1,6 +1,8 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
  * Version 0.1.0
+ *
+ * @author Anthony PERIQUET
  */
 var vanilla = (function(window, document) {
     var events = []
