@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.1.0
+ * Version 0.1.1
  *
  * @author Anthony PERIQUET
  */
