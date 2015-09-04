@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.1.1
+ * Version 0.1.2
  *
  * @author Anthony PERIQUET
  */
@@ -91,6 +91,7 @@ var vanilla = (function(window, document) {
                 s.display = "block";
                 (function unfade(){var val=parseFloat(s.opacity);if(!((val+=.01)>opacity)){s.opacity=val;setTimeout(unfade,duration/100);}})();
             }
+            return this;
         },
 
         fadeOut: function( duration ) {
@@ -100,6 +101,7 @@ var vanilla = (function(window, document) {
                 s.opacity = s.opacity != null ? s.opacity : 1;
                 (function fade(){(s.opacity-=.1)<0?s.display="none":setTimeout(fade,duration/100)})();
             }
+            return this;
         },
 
         // Interactions
