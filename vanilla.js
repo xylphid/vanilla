@@ -11,8 +11,8 @@ var vanilla = (function(window, document) {
         if (!(this instanceof vanilla))
             return new vanilla( query );
 
+        this.selector = query;
         this.nodes = selector( query );
-        //this.fadeInit;
     };
 
     vanilla.prototype = {
@@ -140,6 +140,13 @@ var vanilla = (function(window, document) {
             return this;
         },
 
+        clone: function() {
+            elm = vanilla();
+            elm.selector = this.selector;
+            for (var i = 0; i < this.nodes.length; i++) { elm.nodes.push(this.nodes[i].cloneNode(true)); }
+            return elm;
+        },
+
         remove: function() {
             for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
         },
@@ -229,6 +236,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
+
         off: function(event) {
             var nListeners = Object.keys(listeners).length;
             for (var i = 0; i < nListeners; i++) {
@@ -264,7 +272,7 @@ var vanilla = (function(window, document) {
             elm = document.querySelectorAll( query );
         }
 
-        return elm;
+        return typeof elm === typeof undefined ? [] : elm;
     }
 
     // utils
