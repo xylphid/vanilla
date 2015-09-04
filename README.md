@@ -69,6 +69,7 @@ These are the currently supported methods:
 * appendTo
 * prepend
 * prependTo
+* remove
 * empty
 * html
 * prev

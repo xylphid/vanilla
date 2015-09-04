@@ -20,7 +20,7 @@ var vanilla = (function(window, document) {
         // Attributes management
         attr: function( attr, value ) {
             if (typeof value != 'undefined') {
-                for (i = 0; i < this.nodes.length; i++) {
+                for (var i = 0; i < this.nodes.length; i++) {
                     this.nodes[i].setAttribute(attr, value);
                 }
                 return this;
@@ -33,8 +33,8 @@ var vanilla = (function(window, document) {
         // Class management
         addClass: function( className ) {
             classNames = className.split(' ');
-            for (i = 0; i < this.nodes.length; i++) {
-                for (key in classNames) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var key in classNames) {
                     this.nodes[i].classList.add(classNames[key]);
                 }
             }
@@ -43,7 +43,7 @@ var vanilla = (function(window, document) {
         
         hasClass: function( className ) {
             hasClass = false;
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 hasClass = hasClass || new RegExp(' ' + className + ' ').test(' ' + this.nodes[i].classList + ' ');
             }
             return hasClass;
@@ -51,7 +51,7 @@ var vanilla = (function(window, document) {
         
         removeClass: function( className ) {
             classNames = className.split(' ');
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 for (key in classNames) {
                     this.nodes[i].classList.remove(classNames[key]);
                 }
@@ -60,7 +60,7 @@ var vanilla = (function(window, document) {
         },
         
         toggleClass: function( className ) {
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 this.nodes[i].classList.toggle( className );
             }
             return this;
@@ -69,7 +69,7 @@ var vanilla = (function(window, document) {
         // Style management
         css: function( attr, value ) {
             if (typeof value != 'undefined') {
-                for (i = 0; i < this.nodes.length; i++) {
+                for (var i = 0; i < this.nodes.length; i++) {
                     this.nodes[i].defaultStyle = typeof this.nodes[i].defaultStyle == typeof undefined ? {} : this.nodes[i].defaultStyle;
                     if (typeof this.nodes[i].defaultStyle[ camelCase(attr) ] == typeof undefined) {
                         this.nodes[i].defaultStyle[ camelCase(attr) ] = 
@@ -83,7 +83,7 @@ var vanilla = (function(window, document) {
 
         fadeIn: function( duration ) {
             duration = typeof duration == typeof undefined ? 500 : duration;
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 var s = this.nodes[i].style;
                 var opacity = typeof this.nodes[i].defaultStyle['opacity'] != typeof undefined ? this.nodes[i].defaultStyle['opacity'] : 1;
                 
@@ -95,7 +95,7 @@ var vanilla = (function(window, document) {
 
         fadeOut: function( duration ) {
             duration = typeof duration == typeof undefined ? 500 : duration;
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 var s = this.nodes[i].style;
                 s.opacity = s.opacity != null ? s.opacity : 1;
                 (function fade(){(s.opacity-=.1)<0?s.display="none":setTimeout(fade,duration/100)})();
@@ -104,8 +104,8 @@ var vanilla = (function(window, document) {
 
         // Interactions
         append: function( elm ) {
-            for (i = 0; i < this.nodes.length; i++) {
-                for (j = 0; j < elm.nodes.length; j++) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
                     this.nodes[i].appendChild( elm.nodes[j] );
                 }
             }
@@ -113,17 +113,17 @@ var vanilla = (function(window, document) {
         },
         appendTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = new vanilla( elm );
-            for (i = 0; i < this.nodes.length; i++) {
-                for (j = 0; j < elm.nodes.length; j++) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
                     elm.nodes[j].appendChild( this.nodes[i] );
                 }
             }
             return this;
         },
         prepend: function( elm ) {
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 first = this.nodes[i].hasChildNodes() ? this.nodes[i].firstChild : null;
-                for (j = 0; j < elm.nodes.length; j++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
                     first !== null ? this.nodes[i].insertBefore( elm.nodes[j], first ) : this.nodes[i].appendChild( elm.nodes[j] );
                 }
             }
@@ -131,8 +131,8 @@ var vanilla = (function(window, document) {
         },
         prependTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = vanilla( elm );
-            for (i = 0; i < this.nodes.length; i++) {
-                for (j = 0; j < elm.nodes.length; j++) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
                     first = elm.nodes[i].hasChildNodes() ? elm.nodes[i].firstChild : null;
                     first !== null ? elm.nodes[i].insertBefore( this.nodes[j], first ) : elm.nodes[i].appendChild( this.nodes[j] );
                 }
@@ -140,15 +140,19 @@ var vanilla = (function(window, document) {
             return this;
         },
 
+        remove: function() {
+            for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
+        },
+
         empty: function() {
-            for (i = 0; i < this.nodes.length; i++) {
+            for (var i = 0; i < this.nodes.length; i++) {
                 while (this.nodes[i].firstChild) { this.nodes[i].removeChild(this.nodes[i].firstChild); }
             }
         },
 
         html: function( html ) {
             if (typeof html != typeof undefined) {
-                for (i = 0; i < this.nodes.length; i++) { this.nodes[i].innerHTML = html; }
+                for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].innerHTML = html; }
                 return this;
             }
             else
