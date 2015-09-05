@@ -63,6 +63,10 @@ These are the currently supported methods:
 * removeClass
 * toggleClass
 * css
+* innerHeight
+* innerWidth
+* outerHeight
+* outerWidth
 * fadeIn
 * fadeOut
 * append

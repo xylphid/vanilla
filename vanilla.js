@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.1.2
+ * Version 0.1.3
  *
  * @author Anthony PERIQUET
  */
@@ -79,6 +79,26 @@ var vanilla = (function(window, document) {
                 }
                 return this;
             } else { return this.nodes[0].style[camelCase(attr)]; }
+        },
+
+        innerHeight: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].clientHeight;
+        },
+
+        innerWidth: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].clientWidth;
+        },
+
+        outerHeight: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].offsetHeight;
+        },
+
+        outerWidth: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].offsetWidth;
         },
 
         fadeIn: function( duration ) {
