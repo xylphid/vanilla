@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.1.3
+ * Version 0.2.0
  *
  * @author Anthony PERIQUET
  */
@@ -273,7 +273,56 @@ var vanilla = (function(window, document) {
                 if (rm === true) delete listeners[i];
             }
             return this;
+        },
+
+        // Touch devices extracted from konami-js (https://github.com/snaptortoise/konami-js)
+        touch: {
+            start_x:0,
+            start_y:0,
+            stop_x:0,
+            stop_y:0,
+            tap:false,
+            capture:false,
+            load: function( vanilla, direction, callback ) {
+                vanilla.on('touchmove', function(e) {
+                    if (e.touches.length == 1 && vanilla.touch.capture == true) {
+                        var touch = e.touches[0];
+                        vanilla.touch.stop_x = touch.pageX;
+                        vanilla.touch.stop_y = touch.pageY;
+                        vanilla.touch.tap = false;
+                        vanilla.touch.capture = false;
+                        //vanilla.touch.checkDirection();
+                    }
+                });
+                vanilla.on('touchend', function(e) {
+                    //if (vanilla.touch.tap == true) vanilla.touch.checkDirection( direction, callback );
+                    vanilla.touch.checkDirection( direction, callback );
+                }, false);
+                vanilla.on('touchstart', function(e) {
+                    vanilla.touch.start_x = e.changedTouches[0].pageX;
+                    vanilla.touch.start_y = e.changedTouches[0].pageY;
+                    vanilla.touch.tap = true;
+                    vanilla.touch.capture = true;
+                });
+            },
+            checkDirection: function( direction, callback ) {
+                x_magnitude = Math.abs(this.start_x - this.stop_x);
+                y_magnitude = Math.abs(this.start_y - this.stop_y);
+                x = ((this.start_x - this.stop_x) < 0) ? 'right' : 'left';
+                y = ((this.start_y - this.stop_y) < 0) ? 'down' : 'up';
+                result = (x_magnitude > y_magnitude) ? x : y;
+                result = (this.tap == true) ? 'tap' : result;
+
+                if (result == direction) callback();
+            }
+        },
+
+        swipe: function( direction, callback ) {
+            var touchDirection = this.touch.load( this, direction, callback );
+            console.log( touchDirection );
+            return this;
         }
+        
     };
 
     var selector = function( query ) {
