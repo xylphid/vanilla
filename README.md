@@ -84,6 +84,7 @@ These are the currently supported methods:
 * ready
 * on
 * off
+* swipe
 
 # License (MIT)
 
