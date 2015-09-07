@@ -74,6 +74,7 @@ These are the currently supported methods:
 * prepend
 * prependTo
 * clone
+* replaceWith
 * remove
 * empty
 * html
@@ -85,6 +86,8 @@ These are the currently supported methods:
 * on
 * off
 * swipe
+* load
+* ajax
 
 # License (MIT)
 

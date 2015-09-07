@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.0
+ * Version 0.2.1
  *
  * @author Anthony PERIQUET
  */
@@ -169,6 +169,13 @@ var vanilla = (function(window, document) {
             return elm;
         },
 
+        replaceWith: function( replacement ) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                this.nodes[i].outerHTML = (replacement instanceof vanilla) ? replacement.nodes[0].outerHTML : replacement;
+            }
+            return this;
+        },
+
         remove: function() {
             for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
         },
@@ -318,8 +325,42 @@ var vanilla = (function(window, document) {
         },
 
         swipe: function( direction, callback ) {
-            var touchDirection = this.touch.load( this, direction, callback );
-            console.log( touchDirection );
+            this.touch.load( this, direction, callback );
+            return this;
+        },
+
+        // Ajax
+        load: function( param ) {
+            var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            if (urlPattern.test( param ))
+                this.ajax( 'GET', param );
+            else if (typeof param === 'function') {
+                var callback = param;
+                this.on('load', callback);
+            }
+            return this;
+        },
+
+        ajax: function( method, url ) {
+            var request = new XMLHttpRequest();
+            request.open(method, url, true);
+
+            request.onload = function() {
+                if (request.status >= 200 && request < 400) {
+                    this.append(request.responseText);
+                } else { console.log( request.responseText ) }
+            }
+            request.onerror = function() {
+                // There was a connection error of some sort
+                console.log( 'Unable to reach destination.' );
+            }
+
+            request.send();
             return this;
         }
         
@@ -329,7 +370,7 @@ var vanilla = (function(window, document) {
         var elm = null;
         if (typeof query !== 'string') {
             // If it's not a string assume it's already an element 
-            elm = query;
+            elm = [query];
         } else if ( isTag(query) ) {
             // check if it's a tag
             var tag = query.substring(1, query.length-1);
@@ -337,7 +378,7 @@ var vanilla = (function(window, document) {
         } else if ( isId(query) ) {
             // check if it's an id
             var id = query.substring(1);
-            elm = document.getElementById( id );
+            elm = [document.getElementById( id )];
         } else {
             // run a basic query
             elm = document.querySelectorAll( query );
