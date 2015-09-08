@@ -76,6 +76,7 @@ These are the currently supported methods:
 * clone
 * replaceWith
 * remove
+* is
 * empty
 * html
 * prev

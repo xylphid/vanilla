@@ -180,6 +180,16 @@ var vanilla = (function(window, document) {
             for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
         },
 
+        is: function( query ) {
+            var all = document.querySelectorAll( query );
+            for (var i = 0; i < all.length; i++) {
+                if (all[i] === this.nodes[0]) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
         empty: function() {
             for (var i = 0; i < this.nodes.length; i++) {
                 while (this.nodes[i].firstChild) { this.nodes[i].removeChild(this.nodes[i].firstChild); }
@@ -226,8 +236,7 @@ var vanilla = (function(window, document) {
 
         parent: function() {
             if (this.nodes[0].parentNode !== null) {
-                o = new vanilla();
-                o.nodes = [this.nodes[0].parentNode];
+                o = new vanilla(this.nodes[0].parentNode);
             }
             else o = this.nodes[0].parentNode;
             return o;
