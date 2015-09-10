@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.3
+ * Version 0.2.4
  *
  * @author Anthony PERIQUET
  */
@@ -337,18 +337,19 @@ var vanilla = (function(window, document) {
                         vanilla.touch.stop_y = touch.pageY;
                         vanilla.touch.tap = false;
                         vanilla.touch.capture = false;
-                        //vanilla.touch.checkDirection();
                     }
+                    e.preventDefault();
                 });
                 vanilla.on('touchend', function(e) {
-                    //if (vanilla.touch.tap == true) vanilla.touch.checkDirection( direction, callback );
                     vanilla.touch.checkDirection( direction, callback );
+                    e.preventDefault();
                 }, false);
                 vanilla.on('touchstart', function(e) {
                     vanilla.touch.start_x = e.changedTouches[0].pageX;
                     vanilla.touch.start_y = e.changedTouches[0].pageY;
                     vanilla.touch.tap = true;
                     vanilla.touch.capture = true;
+                    e.preventDefault();
                 });
             },
             checkDirection: function( direction, callback ) {
