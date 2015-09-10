@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.5
+ * Version 0.2.6
  *
  * @author Anthony PERIQUET
  */
@@ -417,7 +417,7 @@ var vanilla = (function(window, document) {
         var elm = null;
         if (typeof query !== 'string') {
             // If it's not a string assume it's already an element 
-            elm = [query];
+            elm = query instanceof vanilla ? query.nodes : [query];
         } else if ( isTag(query) ) {
             // check if it's a tag
             var tag = query.substring(1, query.length-1);
