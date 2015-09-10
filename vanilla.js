@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.1
+ * Version 0.2.3
  *
  * @author Anthony PERIQUET
  */
@@ -30,7 +30,7 @@ var vanilla = (function(window, document) {
                 return value === null ? undefined : value;
             }
         },
-        // Class management
+        // Add class to each elements in the set
         addClass: function( className ) {
             classNames = className.split(' ');
             for (var i = 0; i < this.nodes.length; i++) {
@@ -40,7 +40,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+        // Return true if each element in the set has the given class
         hasClass: function( className ) {
             hasClass = false;
             for (var i = 0; i < this.nodes.length; i++) {
@@ -48,7 +48,7 @@ var vanilla = (function(window, document) {
             }
             return hasClass;
         },
-        
+        // Remove the given class to each elements in the set
         removeClass: function( className ) {
             classNames = className.split(' ');
             for (var i = 0; i < this.nodes.length; i++) {
@@ -58,15 +58,14 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+        // Toggle the given class to each elements in the set
         toggleClass: function( className ) {
             for (var i = 0; i < this.nodes.length; i++) {
                 this.nodes[i].classList.toggle( className );
             }
             return this;
         },
-
-        // Style management
+        // Define css property for each elements in the set or get the property value of the first element
         css: function( attr, value ) {
             if (typeof value != 'undefined') {
                 for (var i = 0; i < this.nodes.length; i++) {
@@ -80,27 +79,27 @@ var vanilla = (function(window, document) {
                 return this;
             } else { return this.nodes[0].style[camelCase(attr)]; }
         },
-
+        // Get inner height of the first element in the set
         innerHeight: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].clientHeight;
         },
-
+        // Get inner width of the first element in the set
         innerWidth: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].clientWidth;
         },
-
+        // Get outer height (height + padding + border + margin) of the first element in the set
         outerHeight: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].offsetHeight;
         },
-
+        // Get outer width (width + padding + border + margin) of the first element in the set
         outerWidth: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].offsetWidth;
         },
-
+        // Fade each element in the set from opacity 0 to the defined opacity
         fadeIn: function( duration ) {
             duration = typeof duration == typeof undefined ? 500 : duration;
             for (var i = 0; i < this.nodes.length; i++) {
@@ -113,7 +112,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-
+        // Fade each element in the set to opacity 0
         fadeOut: function( duration ) {
             duration = typeof duration == typeof undefined ? 500 : duration;
             for (var i = 0; i < this.nodes.length; i++) {
@@ -123,8 +122,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-
-        // Interactions
+        // Add element in parameter to the end of each element in the set
         append: function( elm ) {
             for (var i = 0; i < this.nodes.length; i++) {
                 for (var j = 0; j < elm.nodes.length; j++) {
@@ -133,6 +131,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
+        // Add the current set to the end of the element specified in parameter
         appendTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = new vanilla( elm );
             for (var i = 0; i < this.nodes.length; i++) {
@@ -142,6 +141,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
+        // Add element in parameter to the beginning of each element in the set
         prepend: function( elm ) {
             for (var i = 0; i < this.nodes.length; i++) {
                 first = this.nodes[i].hasChildNodes() ? this.nodes[i].firstChild : null;
@@ -151,6 +151,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
+        // Add the current set to the beginning of the element specified in parameter
         prependTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = vanilla( elm );
             for (var i = 0; i < this.nodes.length; i++) {
@@ -161,25 +162,25 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-
+        // Create a copy of the current set
         clone: function() {
             elm = vanilla();
             elm.selector = this.selector;
             for (var i = 0; i < this.nodes.length; i++) { elm.nodes.push(this.nodes[i].cloneNode(true)); }
             return elm;
         },
-
+        // Replace the current set with element specified in parameter
         replaceWith: function( replacement ) {
             for (var i = 0; i < this.nodes.length; i++) {
                 this.nodes[i].outerHTML = (replacement instanceof vanilla) ? replacement.nodes[0].outerHTML : replacement;
             }
             return this;
         },
-
+        // Delete the current set
         remove: function() {
             for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
         },
-
+        // Check if the current set match the specified selector
         is: function( query ) {
             var all = document.querySelectorAll( query );
             for (var i = 0; i < all.length; i++) {
@@ -189,13 +190,13 @@ var vanilla = (function(window, document) {
             }
             return false;
         },
-
+        // Empty the content of each element in the set
         empty: function() {
             for (var i = 0; i < this.nodes.length; i++) {
                 while (this.nodes[i].firstChild) { this.nodes[i].removeChild(this.nodes[i].firstChild); }
             }
         },
-
+        // Set the content of each element in the set or get le content of the first element
         html: function( html ) {
             if (typeof html != typeof undefined) {
                 for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].innerHTML = html; }
@@ -204,8 +205,23 @@ var vanilla = (function(window, document) {
             else
                 return this.nodes[0].innerHTML;
         },
-
-        // Traversing
+        // Get the first child element of the first element
+        firstChild: function() {
+            first = this.nodes[0].firstChild;
+            while (first !== null && (first.nodeType == 8 || (first.nodeType == 3 && !/\S/.test(first.nodeValue)))) {
+                first = first.nextSibling;
+            }
+            return vanilla(first);
+        },
+        // Get the last child element of the first element
+        lastChild: function() {
+            last = this.nodes[0].lastChild;
+            while (last !== null && (last.nodeType == 8 || (last.nodeType == 3 && !/\S/.test(last.nodeValue)))) {
+                last = last.previousSibling;
+            }
+            return vanilla(last);
+        },
+        // Get the previous sibling of the first element
         prev: function() {
             sibling = this.nodes[0].previousSibling;
             while (sibling !== null && (sibling.nodeType == 8 || (sibling.nodeType == 3 && !/\S/.test(sibling.nodeValue)))) {
@@ -213,13 +229,13 @@ var vanilla = (function(window, document) {
             }
 
             if (sibling !== null) {
-                o = new vanilla();
-                o.nodes = [sibling];
+                o = new vanilla(sibling);
+                o.selector = this.selector;
             }
             else o = sibling;
             return o;
         },
-
+        // Get the next sibling of the first element
         next: function() {
             sibling = this.nodes[0].nextSibling;
             while (sibling !== null && (sibling.nodeType == 8 || (sibling.nodeType == 3 && !/\S/.test(sibling.nodeValue)))) {
@@ -227,13 +243,13 @@ var vanilla = (function(window, document) {
             }
 
             if (sibling !== null) {
-                o = new vanilla();
-                o.nodes = [sibling];
+                o = new vanilla(sibling);
+                o.selector = this.selector;
             }
             else o = sibling;
             return o;
         },
-
+        // Get the ancestor of the first element
         parent: function() {
             if (this.nodes[0].parentNode !== null) {
                 o = new vanilla(this.nodes[0].parentNode);
@@ -241,7 +257,7 @@ var vanilla = (function(window, document) {
             else o = this.nodes[0].parentNode;
             return o;
         },
-
+        // Execute handler specified in parameter to each element in the set
         each: function( handler ) {
             if (typeof handler != 'function') return this;
             var nodes = [];
@@ -253,35 +269,49 @@ var vanilla = (function(window, document) {
             [].forEach.call(nodes, handler);
             return this;
         },
-
-        // Events
+        // Add event handler on content loaded event
         ready: function( callback ) {
             document.addEventListener('DOMContentLoaded', callback, false);
         },
-
-        on: function(event, handler, capture) {
-            var nListeners = Object.keys(listeners).length
+        // Add event handler to the selected element
+        on: function(event, query, handler, capture) {
+            if (typeof query == 'function') {
+                capture = handler;
+                handler = query;
+                query = null;
+            }
+            var nListeners = Object.keys(listeners).length;
             capture = typeof capture === typeof undefined ? false : capture;
-            // Add event listener
+            // Define delegated event handler
+            if (query !== null) {
+                var delegatedHandler = function(event) {
+                    event.value = vanilla(event.target);
+                    while (event.value instanceof vanilla && !event.value.is(query)) {
+                        event.value = event.value.parent();
+                    }
+                    if (event.value && event.value.is( query )) return handler(event);
+                };
+            }
+            // Set event listeners
             for (var i = 0; i < this.nodes.length; i++) {
-                this.nodes[i].addEventListener(event, handler, capture);
+                this.nodes[i].addEventListener(event, !query ? handler : delegatedHandler, capture);
                 listeners[nListeners + i] = {
                     element: this.nodes[i],
                     event: event,
-                    handler: handler,
+                    handler: !query ? handler : delegatedHandler,
                     capture: capture
                 };
             }
             return this;
         },
-
+        // Remove event handler
         off: function(event) {
             var nListeners = Object.keys(listeners).length;
             for (var i = 0; i < nListeners; i++) {
                 var rm = false;
                 for (var n = 0; n < this.nodes.length; n++) {
                     var l = listeners[i];
-                    if (l.event = event) {
+                    if (l.event == event) {
                         this.nodes[n].removeEventListener(l.event, l.handler, l.capture);
                         rm = true;
                     }
@@ -332,30 +362,18 @@ var vanilla = (function(window, document) {
                 if (result == direction) callback();
             }
         },
-
+        // Add handler on touch event
         swipe: function( direction, callback ) {
             this.touch.load( this, direction, callback );
             return this;
         },
-
-        // Ajax
-        load: function( param ) {
-            var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-            if (urlPattern.test( param ))
-                this.ajax( 'GET', param );
-            else if (typeof param === 'function') {
-                var callback = param;
-                this.on('load', callback);
-            }
+        // Add handler on load event
+        load: function( handler ) {
+            this.on('load', handler);
             return this;
         },
-
-        ajax: function( method, url ) {
+        // Load ajax content
+        ajax: function( method, url, datas ) {
             var request = new XMLHttpRequest();
             request.open(method, url, true);
 

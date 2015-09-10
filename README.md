@@ -79,6 +79,8 @@ These are the currently supported methods:
 * is
 * empty
 * html
+* firstChild
+* lastChild
 * prev
 * next
 * parent
