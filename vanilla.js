@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.4
+ * Version 0.2.5
  *
  * @author Anthony PERIQUET
  */
@@ -100,25 +100,44 @@ var vanilla = (function(window, document) {
             return this.nodes[0].offsetWidth;
         },
         // Fade each element in the set from opacity 0 to the defined opacity
-        fadeIn: function( duration ) {
+        fadeIn: function( callback, duration ) {
+            duration = typeof callback != 'function' ? callback : duration;
             duration = typeof duration == typeof undefined ? 500 : duration;
+            callback = typeof callback != 'function' ? null : callback;
             for (var i = 0; i < this.nodes.length; i++) {
                 var s = this.nodes[i].style;
-                var opacity = typeof this.nodes[i].defaultStyle['opacity'] != typeof undefined ? this.nodes[i].defaultStyle['opacity'] : 1;
+                var opacity = this.nodes[i].defaultStyle && typeof this.nodes[i].defaultStyle['opacity'] != typeof undefined ? this.nodes[i].defaultStyle['opacity'] : 1;
                 
                 s.opacity = 0;
-                s.display = "block";
-                (function unfade(){var val=parseFloat(s.opacity);if(!((val+=.01)>opacity)){s.opacity=val;setTimeout(unfade,duration/100);}})();
+                s.display = s.display == 'none' ? "block" : s.display;
+                (function unfade(){
+                    var val=parseFloat(s.opacity);
+                    if(!((val+=.01)>opacity)) {
+                        s.opacity=val;
+                        setTimeout(unfade,duration/100);
+                    } else if(callback){
+                        callback();
+                    }
+                })();
             }
             return this;
         },
         // Fade each element in the set to opacity 0
-        fadeOut: function( duration ) {
+        fadeOut: function( callback, duration ) {
+            duration = typeof callback != 'function' ? callback : duration;
             duration = typeof duration == typeof undefined ? 500 : duration;
+            callback = typeof callback != 'function' ? null : callback;
             for (var i = 0; i < this.nodes.length; i++) {
                 var s = this.nodes[i].style;
-                s.opacity = s.opacity != null ? s.opacity : 1;
-                (function fade(){(s.opacity-=.1)<0?s.display="none":setTimeout(fade,duration/100)})();
+                s.opacity = s.opacity ? s.opacity : 1;
+                (function fade(){
+                    if ((s.opacity-=.01)<0) {
+                        s.display="none"
+                        if (callback) callback();
+                    } else {
+                        setTimeout(fade,(duration/100))
+                    }
+                })();
             }
             return this;
         },
