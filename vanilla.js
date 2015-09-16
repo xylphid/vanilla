@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.7
+ * Version 0.2.8
  *
  * @author Anthony PERIQUET
  */
@@ -199,7 +199,7 @@ var vanilla = (function(window, document) {
         },
         // Delete the current set
         remove: function() {
-            for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].parentNode.removeChild(this.nodes[i]); }
+            for (var i = 0; i < this.nodes.length; i++) { (this.nodes[i].parentNode || this.nodes[i].parent).removeChild(this.nodes[i]); }
         },
         // Check if the current set match the specified selector
         is: function( query ) {
