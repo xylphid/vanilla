@@ -90,7 +90,9 @@ These are the currently supported methods:
 * off
 * swipe
 * load
+Currently supported functions :
 * ajax
+* extend
 
 # License (MIT)
 

@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.6
+ * Version 0.2.7
  *
  * @author Anthony PERIQUET
  */
@@ -143,9 +143,10 @@ var vanilla = (function(window, document) {
         },
         // Add element in parameter to the end of each element in the set
         append: function( elm ) {
+            nodes = elm instanceof vanilla ? elm.nodes : parseHtml(elm);
             for (var i = 0; i < this.nodes.length; i++) {
-                for (var j = 0; j < elm.nodes.length; j++) {
-                    this.nodes[i].appendChild( elm.nodes[j] );
+                for (var j = 0; j < nodes.length; j++) {
+                    this.nodes[i].appendChild( nodes[j] );
                 }
             }
             return this;
@@ -162,10 +163,11 @@ var vanilla = (function(window, document) {
         },
         // Add element in parameter to the beginning of each element in the set
         prepend: function( elm ) {
+            nodes = elm instanceof vanilla ? elm.nodes : parseHtml(elm);
             for (var i = 0; i < this.nodes.length; i++) {
                 first = this.nodes[i].hasChildNodes() ? this.nodes[i].firstChild : null;
-                for (var j = 0; j < elm.nodes.length; j++) {
-                    first !== null ? this.nodes[i].insertBefore( elm.nodes[j], first ) : this.nodes[i].appendChild( elm.nodes[j] );
+                for (var j = 0; j < nodes.length; j++) {
+                    first !== null ? this.nodes[i].insertBefore( nodes[j], first ) : this.nodes[i].appendChild( nodes[j] );
                 }
             }
             return this;
@@ -197,7 +199,7 @@ var vanilla = (function(window, document) {
         },
         // Delete the current set
         remove: function() {
-            for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].remove(); }
+            for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].parentNode.removeChild(this.nodes[i]); }
         },
         // Check if the current set match the specified selector
         is: function( query ) {
@@ -391,26 +393,49 @@ var vanilla = (function(window, document) {
         load: function( handler ) {
             this.on('load', handler);
             return this;
-        },
-        // Load ajax content
-        ajax: function( method, url, datas ) {
-            var request = new XMLHttpRequest();
-            request.open(method, url, true);
-
-            request.onload = function() {
-                if (request.status >= 200 && request < 400) {
-                    this.append(request.responseText);
-                } else { console.log( request.responseText ) }
-            }
-            request.onerror = function() {
-                // There was a connection error of some sort
-                console.log( 'Unable to reach destination.' );
-            }
-
-            request.send();
-            return this;
         }
         
+    };
+
+    //vanilla.ajax = function( method, url, datas, callback ) {
+    vanilla.ajax = function( url, options ) {
+        options = typeof options != typeof undefined ? options : {};
+        var request = new XMLHttpRequest();
+        request.open(options.method ? options.method : 'GET', url, true);
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                if (typeof options.success != typeof undefined) {
+                    options.success( request );
+
+                    var s = parseScript( parseHtml( request.responseText ) );
+                    for (var i=0; i<s.length; i++) {
+                        window.eval(s[i].text);
+                    }
+                }
+            }
+        }
+        request.onerror = function() {
+            // There was a connection error of some sort
+            if (typeof options.error != typeof undefined)
+                options.error( request );
+        }
+
+        request.send(options.datas ? options.datas : null);
+    };
+
+    vanilla.extend = function(out) {
+        out = out || {};
+        for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i])
+                continue;
+            for (var key in arguments[i]) {
+                if (arguments[i].hasOwnProperty(key))
+                    out[key] = arguments[i][key];
+            }
+        }
+
+        return out;
     };
 
     var selector = function( query ) {
@@ -452,6 +477,33 @@ var vanilla = (function(window, document) {
         i = i || 0;
         // more sophisticated logic here?
         return _selected[i] || _selected;
+    };
+
+    var isHtml = function( string ){
+        var t = document.createElement('div');
+        t.innerHTML = string;
+        for (var n = t.childNodes, i = n.length; n--;) {
+            if (n[i].nodeType == 1) return true;
+        }
+        return false;
+    };
+
+    var parseHtml = function( string ){
+        var parser = new DOMParser();
+        var htmlDoc = parser.parseFromString( string, 'text/html' );
+        return htmlDoc.body.childNodes;
+    };
+
+    var parseScript = function( nodeList ){
+        var scripts = [];
+        for (var i=0; i<nodeList.length; i++) {
+            if (nodeList[i].tagName == 'SCRIPT') {
+                scripts.push( nodeList[i] );
+            } else if (nodeList[i].nodeType == 1) {
+                scripts = vanilla.extend([], scripts, parseScript(nodeList[i].childNodes));
+            }
+        }
+        return scripts;
     };
 
     window.vanilla = new vanilla();
