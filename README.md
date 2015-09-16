@@ -79,6 +79,7 @@ These are the currently supported methods:
 * is
 * empty
 * html
+* outerHtml
 * firstChild
 * lastChild
 * prev
