@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.10
+ * Version 0.2.11
  *
  * @author Anthony PERIQUET
  */
@@ -217,7 +217,13 @@ var vanilla = (function(window, document) {
         
         // Delete the current set
         remove: function() {
-            for (var i = 0; i < this.nodes.length; i++) { this.nodes[i].parentNode.removeChild(this.nodes[i]); }
+            for (var i = 0; i < this.nodes.length; i++) { 
+                var node = this.nodes[i];
+                if (typeof node.remove != typeof undefined)
+                    node.remove();
+                else
+                    (typeof node.parentNode != typeof undefined) ? node.parentNode.removeChild(node) : node.parent.removeChild(node); 
+            }
         },
         
         // Check if the current set match the specified selector
