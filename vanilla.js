@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.11
+ * Version 0.2.12
  *
  * @author Anthony PERIQUET
  */
@@ -445,6 +445,9 @@ var vanilla = (function(window, document) {
         options = typeof options != typeof undefined ? options : {};
         var request = new XMLHttpRequest();
         request.open(options.method ? options.method : 'GET', url, true);
+        request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        if (options.method == 'POST')
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
         request.onload = function() {
             // If success
@@ -458,12 +461,14 @@ var vanilla = (function(window, document) {
                         window.eval(s[i].text);
                     }
                 }
+            } else if (typeof options.error != typeof undefined) {
+                // We reached our target server, but it returned an error
+                options.error( request );
             }
         }
         request.onerror = function() {
             // There was a connection error of some sort
-            if (typeof options.error != typeof undefined)
-                options.error( request );
+            console.log( request.responseText );
         }
 
         request.send(options.datas ? options.datas : null);
