@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.12
+ * Version 0.2.13
  *
  * @author Anthony PERIQUET
  */
@@ -82,7 +82,8 @@ var vanilla = (function(window, document) {
                     this.nodes[i].style[ camelCase(attr) ] = value;
                 }
                 return this;
-            } else { return this.nodes[0].style[camelCase(attr)]; }
+            //} else { return this.nodes[0].style[camelCase(attr)]; }
+            } else { return getComputedStyle(this.nodes[0])[camelCase(attr)]; }
         },
         
         // Get inner height of the first element in the set
@@ -107,6 +108,26 @@ var vanilla = (function(window, document) {
         outerWidth: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].offsetWidth;
+        },
+
+        scrollTop: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].scrollTop;
+        },
+
+        scrollLeft: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].scrollLeft;
+        },
+
+        scrollHeight: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].scrollHeight;
+        },
+
+        scrollWidth: function() {
+            if (this.nodes.length == 0) return null;
+            return this.nodes[0].scrollWidth;
         },
         
         // Fade each element in the set from opacity 0 to the defined opacity
@@ -314,6 +335,16 @@ var vanilla = (function(window, document) {
             }
             else o = this.nodes[0].parentNode;
             return o;
+        },
+
+        // Get children collection
+        children: function( query ) {
+            var items = query ? this.nodes[0].querySelectorAll( query ) : this.nodes[0].children;
+            var children = [];
+            for (var i=0; i< items.length; i++) {
+                children[i] = vanilla( items[i] );
+            }
+            return children;
         },
         
         // Execute handler specified in parameter to each element in the set
