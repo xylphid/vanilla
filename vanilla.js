@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 0.2.13
+ * Version 0.2.14
  *
  * @author Anthony PERIQUET
  */
@@ -502,7 +502,7 @@ var vanilla = (function(window, document) {
             console.log( request.responseText );
         }
 
-        request.send(options.datas ? options.datas : null);
+        request.send(options.datas ? serialize(options.datas) : null);
     };
 
     // Extend module
@@ -587,6 +587,17 @@ var vanilla = (function(window, document) {
         }
         return scripts;
     };
+
+    var serialize = function(obj, prefix) {
+        var str = [];
+        for(var p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+                str.push(typeof v == "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+            }
+        }
+        return str.join("&");
+    }
 
     window.vanilla = new vanilla();
     return vanilla;
