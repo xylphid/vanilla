@@ -416,7 +416,10 @@ var vanilla = (function(window, document) {
             var form = this.nodes[0];
             var serial = {};
             for (var i =0; i <form.length; i++) {
-                serial[form.elements[i].name] = form.elements[i].value;
+                if (form.elements[i].getAttribute('type') == 'file')
+                    serial[form.elements[i].name] = form.elements[i].files;
+                else
+                    serial[form.elements[i].name] = form.elements[i].value;
             }
             return serial;
         },
@@ -496,8 +499,6 @@ var vanilla = (function(window, document) {
         var request = new XMLHttpRequest();
         request.open(options.method ? options.method : 'GET', url, true);
         request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-        if (options.method == 'POST')
-            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
         request.onload = function() {
             // If success
@@ -521,7 +522,12 @@ var vanilla = (function(window, document) {
             console.log( request.responseText );
         }
 
-        request.send(options.datas ? serialize(options.datas) : null);
+        if (options.method == 'POST')
+            options.datas = options.datas ? convertToFormData(options.datas) : null;
+        else
+            options.datas = options.datas ? serialize(options.datas) : null;
+
+        request.send(options.datas);
     };
 
     // Extend module
@@ -620,6 +626,22 @@ var vanilla = (function(window, document) {
             }
         }
         return str.join("&");
+    }
+
+    var convertToFormData = function(obj) {
+        var formData = new FormData();
+        for (var p in obj) {
+            if (!(obj[p] instanceof FileList))
+                formData.append(p, obj[p]);
+            else if (obj[p].length == 1) {
+                formData.append(p, obj[p][0], obj[p][0].name);
+            } else {
+                for (var i = 0; i < obj[p].length; i++) {
+                    formData.append(p + '[]', obj[p].files[i], obj[p].files[i].name);
+                }
+            }
+        }
+        return formData;
     }
 
     window.vanilla = new vanilla();
