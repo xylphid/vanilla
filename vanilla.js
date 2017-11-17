@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.1
+ * Version 1.0.2
  *
  * @author Anthony PERIQUET
  */
@@ -27,7 +27,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Add element in parameter to the end of each element in the set
         append: function( elm ) {
             nodes = elm instanceof vanilla ? elm.nodes : parseHtml(elm);
@@ -38,7 +38,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Add the current set to the end of the element specified in parameter
         appendTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = new vanilla( elm );
@@ -73,7 +73,7 @@ var vanilla = (function(window, document) {
             }
             return children;
         },
-        
+
         // Create a copy of the current set
         clone: function() {
             elm = vanilla();
@@ -81,23 +81,23 @@ var vanilla = (function(window, document) {
             for (var i = 0; i < this.nodes.length; i++) { elm.nodes.push(this.nodes[i].cloneNode(true)); }
             return elm;
         },
-        
+
         // Define css property for each elements in the set or get the property value of the first element
         css: function( attr, value ) {
             if (typeof value != 'undefined') {
                 for (var i = 0; i < this.nodes.length; i++) {
                     this.nodes[i].defaultStyle = typeof this.nodes[i].defaultStyle == typeof undefined ? {} : this.nodes[i].defaultStyle;
                     if (typeof this.nodes[i].defaultStyle[ camelCase(attr) ] == typeof undefined) {
-                        this.nodes[i].defaultStyle[ camelCase(attr) ] = 
+                        this.nodes[i].defaultStyle[ camelCase(attr) ] =
                             this.nodes[i].style[ camelCase(attr) ] != '' ? this.nodes[i].style[ camelCase(attr) ] : value;
                     }
                     this.nodes[i].style[ camelCase(attr) ] = value;
                 }
                 return this;
-            //} else { return this.nodes[0].style[camelCase(attr)]; }
+                //} else { return this.nodes[0].style[camelCase(attr)]; }
             } else { return getComputedStyle(this.nodes[0])[camelCase(attr)]; }
         },
-        
+
         // Execute handler specified in parameter to each element in the set
         each: function( handler ) {
             if (typeof handler != 'function') return this;
@@ -110,14 +110,14 @@ var vanilla = (function(window, document) {
             [].forEach.call(nodes, handler);
             return this;
         },
-        
+
         // Empty the content of each element in the set
         empty: function() {
             for (var i = 0; i < this.nodes.length; i++) {
                 while (this.nodes[i].firstChild) { this.nodes[i].removeChild(this.nodes[i].firstChild); }
             }
         },
-        
+
         // Fade each element in the set from opacity 0 to the defined opacity
         fadeIn: function( callback, duration ) {
             duration = typeof callback != 'function' ? callback : duration;
@@ -126,7 +126,7 @@ var vanilla = (function(window, document) {
             for (var i = 0; i < this.nodes.length; i++) {
                 var s = this.nodes[i].style;
                 var opacity = this.nodes[i].defaultStyle && typeof this.nodes[i].defaultStyle['opacity'] != typeof undefined ? this.nodes[i].defaultStyle['opacity'] : 1;
-                
+
                 s.opacity = 0;
                 s.display = s.display == 'none' ? "block" : s.display;
                 (function unfade(){
@@ -141,7 +141,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Fade each element in the set to opacity 0
         fadeOut: function( callback, duration ) {
             duration = typeof callback != 'function' ? callback : duration;
@@ -161,7 +161,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Get the first child element of the first element
         firstChild: function() {
             first = this.nodes[0].firstChild;
@@ -170,7 +170,7 @@ var vanilla = (function(window, document) {
             }
             return vanilla(first);
         },
-        
+
         // Return true if each element in the set has the given class
         hasClass: function( className ) {
             hasClass = false;
@@ -179,7 +179,7 @@ var vanilla = (function(window, document) {
             }
             return hasClass;
         },
-        
+
         // Set the content of each element in the set or get le content of the first element
         html: function( html ) {
             if (typeof html != typeof undefined) {
@@ -189,19 +189,19 @@ var vanilla = (function(window, document) {
             else
                 return this.nodes[0].innerHTML;
         },
-        
+
         // Get inner height of the first element in the set
         innerHeight: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].clientHeight;
         },
-        
+
         // Get inner width of the first element in the set
         innerWidth: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].clientWidth;
         },
-        
+
         // Check if the current set match the specified selector
         is: function( query ) {
             var all = document.querySelectorAll( query );
@@ -212,7 +212,7 @@ var vanilla = (function(window, document) {
             }
             return false;
         },
-        
+
         // Get the last child element of the first element
         lastChild: function() {
             last = this.nodes[0].lastChild;
@@ -226,13 +226,13 @@ var vanilla = (function(window, document) {
         length: function() {
             return this.nodes.length;
         },
-        
+
         // Add handler on load event
         load: function( handler ) {
             this.on('load', handler);
             return this;
         },
-        
+
         // Get the next sibling of the first element
         next: function() {
             sibling = this.nodes[0].nextSibling;
@@ -247,14 +247,14 @@ var vanilla = (function(window, document) {
             else o = sibling;
             return o;
         },
-        
+
         // Remove event handler
         off: function(event) {
             var nListeners = Object.keys(listeners).length;
-            for (var i = 0; i < nListeners; i++) {
+            for (var i in listeners) {
                 var rm = false;
+                var l = listeners[i];
                 for (var n = 0; n < this.nodes.length; n++) {
-                    var l = listeners[i];
                     if (l.event == event) {
                         this.nodes[n].removeEventListener(l.event, l.handler, l.capture);
                         rm = true;
@@ -264,7 +264,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Add event handler to the selected element
         on: function(event, query, handler, capture) {
             if (typeof query == 'function') {
@@ -296,24 +296,24 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Get outer height (height + padding + border + margin) of the first element in the set
         outerHeight: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].offsetHeight;
         },
-        
-        // Return the current element 
+
+        // Return the current element
         outerHtml: function() {
             return this.nodes[0].outerHTML;
         },
-        
+
         // Get outer width (width + padding + border + margin) of the first element in the set
         outerWidth: function() {
             if (this.nodes.length == 0) return null;
             return this.nodes[0].offsetWidth;
         },
-        
+
         // Get the ancestor of the first element
         parent: function() {
             if (this.nodes[0].parentNode !== null) {
@@ -322,7 +322,7 @@ var vanilla = (function(window, document) {
             else o = this.nodes[0].parentNode;
             return o;
         },
-        
+
         // Add element in parameter to the beginning of each element in the set
         prepend: function( elm ) {
             nodes = elm instanceof vanilla ? elm.nodes : parseHtml(elm);
@@ -334,7 +334,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Add the current set to the beginning of the element specified in parameter
         prependTo: function( elm ) {
             if (!(elm instanceof vanilla)) elm = vanilla( elm );
@@ -346,7 +346,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Get the previous sibling of the first element
         prev: function() {
             sibling = this.nodes[0].previousSibling;
@@ -361,23 +361,23 @@ var vanilla = (function(window, document) {
             else o = sibling;
             return o;
         },
-        
+
         // Add event handler on content loaded event
         ready: function( callback ) {
             document.addEventListener('DOMContentLoaded', callback, false);
         },
-        
+
         // Delete the current set
         remove: function() {
-            for (var i = 0; i < this.nodes.length; i++) { 
+            for (var i = 0; i < this.nodes.length; i++) {
                 var node = this.nodes[i];
                 if (typeof node.remove != typeof undefined)
                     node.remove();
                 else
-                    (typeof node.parentNode != typeof undefined) ? node.parentNode.removeChild(node) : node.parent.removeChild(node); 
+                    (typeof node.parentNode != typeof undefined) ? node.parentNode.removeChild(node) : node.parent.removeChild(node);
             }
         },
-        
+
         // Remove the given class to each elements in the set
         removeClass: function( className ) {
             classNames = className.split(' ');
@@ -388,7 +388,7 @@ var vanilla = (function(window, document) {
             }
             return this;
         },
-        
+
         // Replace the current set with element specified in parameter
         replaceWith: function( replacement ) {
             for (var i = 0; i < this.nodes.length; i++) {
@@ -428,13 +428,13 @@ var vanilla = (function(window, document) {
             }
             return serial;
         },
-        
+
         // Add handler on touch event
         swipe: function( direction, callback ) {
             this.touch.load( this, direction, callback );
             return this;
         },
-        
+
         // Toggle the given class to each elements in the set
         toggleClass: function( className ) {
             for (var i = 0; i < this.nodes.length; i++) {
@@ -495,7 +495,7 @@ var vanilla = (function(window, document) {
             }
             else return this.nodes[0].value;
         }
-        
+
     };
 
     // Ajax module
@@ -553,7 +553,7 @@ var vanilla = (function(window, document) {
     var selector = function( query ) {
         var elm = null;
         if (typeof query !== 'string') {
-            // If it's not a string assume it's already an element 
+            // If it's not a string assume it's already an element
             elm = query instanceof vanilla ? query.nodes : [query];
         } else if ( isTag(query) ) {
             // check if it's a tag
@@ -651,5 +651,5 @@ var vanilla = (function(window, document) {
 
     window.vanilla = new vanilla();
     return vanilla;
-    
+
 }) (this.window, this.document);
