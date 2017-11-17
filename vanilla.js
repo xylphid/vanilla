@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.0
+ * Version 1.0.1
  *
  * @author Anthony PERIQUET
  */
@@ -67,9 +67,9 @@ var vanilla = (function(window, document) {
         // Get children collection
         children: function( query ) {
             var items = query ? this.nodes[0].querySelectorAll( query ) : this.nodes[0].children;
-            var children = [];
+            var children = vanilla();
             for (var i=0; i< items.length; i++) {
-                children[i] = vanilla( items[i] );
+                children.nodes[i] = items[i];
             }
             return children;
         },
@@ -220,6 +220,11 @@ var vanilla = (function(window, document) {
                 last = last.previousSibling;
             }
             return vanilla(last);
+        },
+
+        // Return the number to elements
+        length: function() {
+            return this.nodes.length;
         },
         
         // Add handler on load event
