@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.3
+ * Version 1.0.4
  *
  * @author Anthony PERIQUET
  */
@@ -436,6 +436,21 @@ var vanilla = (function(window, document) {
         // Add handler on touch event
         swipe: function( direction, callback ) {
             this.touch.load( this, direction, callback );
+            return this;
+        },
+
+        // Toggle the given attribute to each elements in the set
+        toggleAttr: function( attr, value ) {
+            for (var i = 0; i < this.nodes.length; i++) {
+                console.log( this.nodes[i].getAttribute( attr ) );
+                if (this.nodes[i].getAttribute( attr ) == null) {
+                    console.log( "set attribute" );
+                    this.nodes[i].setAttribute( attr, value);
+                } else {
+                    console.log( "remove attribute" );
+                    this.nodes[i].removeAttribute(attr);
+                }
+            }
             return this;
         },
 
