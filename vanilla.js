@@ -55,7 +55,7 @@ var vanilla = (function(window, document) {
             if (typeof value != 'undefined') {
                 for (var i = 0; i < this.nodes.length; i++) {
                     if (value == null) {
-                        this.node[i].removeAttribute(attr);
+                        this.nodes[i].removeAttribute(attr);
                     } else {
                         this.nodes[i].setAttribute(attr, value);
                     }
