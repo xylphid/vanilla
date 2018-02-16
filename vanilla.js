@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.2
+ * Version 1.0.3
  *
  * @author Anthony PERIQUET
  */
@@ -54,7 +54,11 @@ var vanilla = (function(window, document) {
         attr: function( attr, value ) {
             if (typeof value != 'undefined') {
                 for (var i = 0; i < this.nodes.length; i++) {
-                    this.nodes[i].setAttribute(attr, value);
+                    if (value == null) {
+                        this.node[i].removeAttribute(attr);
+                    } else {
+                        this.nodes[i].setAttribute(attr, value);
+                    }
                 }
                 return this;
             }
