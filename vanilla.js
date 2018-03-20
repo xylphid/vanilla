@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.4
+ * Version 1.0.5
  *
  * @author Anthony PERIQUET
  */
@@ -12,7 +12,7 @@ var vanilla = (function(window, document) {
             return new vanilla( query );
 
         this.selector = query;
-        this.nodes = selector( query );
+        this.nodes = typeof query != 'undefined' ? selector( query ) : [];
     };
 
     vanilla.prototype = {
