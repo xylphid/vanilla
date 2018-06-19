@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.5
+ * Version 1.0.6
  *
  * @author Anthony PERIQUET
  */
@@ -26,6 +26,17 @@ var vanilla = (function(window, document) {
                 }
             }
             return this;
+        },
+
+        // Add each element in the set after element in parameter
+        after: function( elm ) {
+            if (!(elm instanceof vanilla)) elm = new vanilla( elm );
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
+                    this.nodes[i].after(elm.nodes[j]);
+                }
+            }
+            return this; 
         },
 
         // Add element in parameter to the end of each element in the set
@@ -66,6 +77,17 @@ var vanilla = (function(window, document) {
                 value = this.nodes[0].getAttribute(attr);
                 return value === null ? undefined : value;
             }
+        },
+
+        // Add each element in the set before element in parameter
+        before: function( elm ) {
+            if (!(elm instanceof vanilla)) elm = new vanilla( elm );
+            for (var i = 0; i < this.nodes.length; i++) {
+                for (var j = 0; j < elm.nodes.length; j++) {
+                    this.nodes[i].before(elm.nodes[j]);
+                }
+            }
+            return this; 
         },
 
         // Get children collection
@@ -442,12 +464,9 @@ var vanilla = (function(window, document) {
         // Toggle the given attribute to each elements in the set
         toggleAttr: function( attr, value ) {
             for (var i = 0; i < this.nodes.length; i++) {
-                console.log( this.nodes[i].getAttribute( attr ) );
                 if (this.nodes[i].getAttribute( attr ) == null) {
-                    console.log( "set attribute" );
                     this.nodes[i].setAttribute( attr, value);
                 } else {
-                    console.log( "remove attribute" );
                     this.nodes[i].removeAttribute(attr);
                 }
             }
@@ -567,6 +586,10 @@ var vanilla = (function(window, document) {
         }
 
         return out;
+    };
+
+    vanilla.is = function( el, query ) {
+        return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, query);
     };
 
     var selector = function( query ) {
