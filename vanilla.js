@@ -1,6 +1,6 @@
 /**
  * Vanilla Framework ;) (https://github.com/xylphid)
- * Version 1.0.6
+ * Version 1.0.7
  *
  * @author Anthony PERIQUET
  */
@@ -36,7 +36,7 @@ var vanilla = (function(window, document) {
                     this.nodes[i].after(elm.nodes[j]);
                 }
             }
-            return this; 
+            return this;
         },
 
         // Add element in parameter to the end of each element in the set
@@ -87,7 +87,7 @@ var vanilla = (function(window, document) {
                     this.nodes[i].before(elm.nodes[j]);
                 }
             }
-            return this; 
+            return this;
         },
 
         // Get children collection
@@ -447,10 +447,21 @@ var vanilla = (function(window, document) {
             var form = this.nodes[0];
             var serial = {};
             for (var i =0; i <form.length; i++) {
-                if (form.elements[i].getAttribute('type') == 'file')
-                    serial[form.elements[i].name] = form.elements[i].files;
-                else
-                    serial[form.elements[i].name] = form.elements[i].value;
+                if (form.elements[i].name && ['submit', 'reset', 'button'].indexOf(form.elements[i].type) == -1) {
+                    if (form.elements[i].getAttribute('type') == 'file')
+                        serial[form.elements[i].name] = form.elements[i].files;
+                    else if (form.elements[i].type == 'select-multiple') {
+                        var options = form.elements[i].options;
+                        serial[form.elements[i].name] = [];
+                        for (var j = 0; j < options.length; j++) {
+                            if (options[j].selected)
+                                serial[form.elements[i].name].push(options[j].value);
+                        }
+                        if (!serial[form.elements[i].name].length){ delete serial[form.elements[i].name]; }
+                    } else if (['checkbox', 'radio'].indexOf(form.elements[i].type) == -1 || field.checked) {
+                        serial[form.elements[i].name] = form.elements[i].value;
+                    }
+                }
             }
             return serial;
         },
@@ -678,13 +689,14 @@ var vanilla = (function(window, document) {
     var convertToFormData = function(obj) {
         var formData = new FormData();
         for (var p in obj) {
-            if (!(obj[p] instanceof FileList))
+            if (!(obj[p] instanceof FileList) && !(obj[p] instanceof Array))
                 formData.append(p, obj[p]);
             else if (obj[p].length == 1) {
                 formData.append(p, obj[p][0], obj[p][0].name);
             } else {
                 for (var i = 0; i < obj[p].length; i++) {
-                    formData.append(p + '[]', obj[p].files[i], obj[p].files[i].name);
+                    if (obj[p] instanceof Array) { formData.append(p + '[]', obj[p][i]); }
+                    else { formData.append(p + '[]', obj[p].files[i], obj[p].files[i].name); }
                 }
             }
         }
